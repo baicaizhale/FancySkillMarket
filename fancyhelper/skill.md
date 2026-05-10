@@ -11,7 +11,7 @@ triggers:
 auto_trigger: true
 source: "fancyhelper"
 author: "FancyHelper Team"
-version: "1.0.0"
+version: "1.0.1"
 categories:
   - "plugin"
   - "config"
@@ -48,3 +48,7 @@ Tip：`fancy` / `cli` / `fancyhelper` 等效
 - `/fancy update` - 检查并安装更新
 - `/fancy checkupdate` - 检查是否有更新
 - `/fancy upgrade` - 安装更新
+- `/fancy skill list` - 查看已加载的 Skill 列表
+- `/fancy skill info <id>` - 查看 Skill 详情
+- `/fancy skill checkupdate` - 检查 Skill 在线更新
+- `/fancy skill upgrade` - 下载并安装所有 Skill 更新
