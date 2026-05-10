@@ -1,0 +1,18 @@
+{
+  "skills": {
+    "cmi": { "version": "1.0.0" },
+    "coreprotect": { "version": "1.0.0" },
+    "essentialsx": { "version": "1.0.0" },
+    "fancyhelper": { "version": "1.0.0" },
+    "give": { "version": "1.0.0" },
+    "house-builder": { "version": "1.0.0" },
+    "luckperms": { "version": "1.0.0" },
+    "mcmmo": { "version": "1.0.0" },
+    "multiverse": { "version": "1.0.0" },
+    "nbt-format": { "version": "1.0.0" },
+    "placeholderapi": { "version": "1.0.0" },
+    "residence": { "version": "1.0.0" },
+    "vault": { "version": "1.0.0" },
+    "worldedit": { "version": "1.0.0" }
+  }
+}
