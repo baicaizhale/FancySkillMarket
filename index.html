@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FancySkillMarket</title>
+<style>
+  body {
+    font-family: system-ui, sans-serif;
+    max-width: 680px;
+    margin: 40px auto;
+    padding: 0 20px;
+    color: #c9d1d9;
+    background: #0d1117;
+  }
+  h1 { font-size: 1.5rem; margin-bottom: 8px; color: #f0f6fc; }
+  p { color: #8b949e; margin-bottom: 24px; }
+  code {
+    background: #21262d;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-size: 0.95em;
+    color: #c9d1d9;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  th, td {
+    text-align: left;
+    padding: 8px 12px;
+    border-bottom: 1px solid #21262d;
+  }
+  th { color: #8b949e; font-weight: 500; font-size: 0.85rem; }
+  td a { color: #58a6ff; text-decoration: none; }
+  td a:hover { text-decoration: underline; }
+  .version { color: #8b949e; font-size: 0.9rem; }
+  .loading { color: #8b949e; }
+</style>
+</head>
+<body>
+
+<h1>FancySkillMarket</h1>
+<p>访问 <code>manifest.json</code> 获取 Skill 列表。</p>
+
+<table>
+  <thead>
+    <tr><th>名称</th><th>版本</th></tr>
+  </thead>
+  <tbody id="tbody">
+    <tr><td colspan="2" class="loading">加载中…</td></tr>
+  </tbody>
+</table>
+
+<script>
+fetch('manifest.json')
+  .then(r => r.json())
+  .then(data => {
+    var names = Object.keys(data.skills).sort();
+    var rows = '';
+    for (var i = 0; i < names.length; i++) {
+      rows += '<tr><td><a href="'+ names[i] +'/skill.md">'+ names[i] +'</a></td><td class="version">'+ data.skills[names[i]].version +'</td></tr>';
+    }
+    document.getElementById('tbody').innerHTML = rows;
+  })
+  .catch(function() {
+    document.getElementById('tbody').innerHTML = '<tr><td colspan="2" style="color:red">加载失败</td></tr>';
+  });
+</script>
+
+</body>
+</html>
+
