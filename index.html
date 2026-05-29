@@ -7,67 +7,41 @@
 <style>
   body {
     font-family: system-ui, sans-serif;
-    max-width: 680px;
-    margin: 40px auto;
-    padding: 0 20px;
-    color: #c9d1d9;
-    background: #0d1117;
+    max-width: 600px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+    color: #333;
+    background: #fff;
   }
-  h1 { font-size: 1.5rem; margin-bottom: 8px; color: #f0f6fc; }
-  p { color: #8b949e; margin-bottom: 24px; }
-  code {
-    background: #21262d;
-    padding: 2px 6px;
-    border-radius: 3px;
-    font-size: 0.95em;
-    color: #c9d1d9;
-  }
-  table {
-    width: 100%;
-    border-collapse: collapse;
-  }
-  th, td {
-    text-align: left;
-    padding: 8px 12px;
-    border-bottom: 1px solid #21262d;
-  }
-  th { color: #8b949e; font-weight: 500; font-size: 0.85rem; }
-  td a { color: #58a6ff; text-decoration: none; }
+  h1 { font-size: 1.4rem; font-weight: 600; }
+  p { color: #666; font-size: 0.95rem; }
+  code { font-size: 0.9em; background: #f0f0f0; padding: 1px 4px; border-radius: 2px; }
+  table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
+  th, td { text-align: left; padding: 6px 10px; border-bottom: 1px solid #eee; }
+  th { font-weight: 600; font-size: 0.85rem; color: #888; }
+  td a { color: #06c; text-decoration: none; }
   td a:hover { text-decoration: underline; }
-  .version { color: #8b949e; font-size: 0.9rem; }
-  .loading { color: #8b949e; }
+  .ver { color: #999; font-size: 0.88rem; }
 </style>
 </head>
 <body>
-
 <h1>FancySkillMarket</h1>
 <p>访问 <code>manifest.json</code> 获取 Skill 列表。</p>
 
 <table>
-  <thead>
-    <tr><th>名称</th><th>版本</th></tr>
-  </thead>
-  <tbody id="tbody">
-    <tr><td colspan="2" class="loading">加载中…</td></tr>
-  </tbody>
+  <thead><tr><th>名称</th><th>版本</th></tr></thead>
+  <tbody id="list"><tr><td colspan="2">加载中…</td></tr></tbody>
 </table>
 
 <script>
-fetch('manifest.json')
-  .then(r => r.json())
-  .then(data => {
-    var names = Object.keys(data.skills).sort();
-    var rows = '';
-    for (var i = 0; i < names.length; i++) {
-      rows += '<tr><td><a href="'+ names[i] +'/skill.md">'+ names[i] +'</a></td><td class="version">'+ data.skills[names[i]].version +'</td></tr>';
-    }
-    document.getElementById('tbody').innerHTML = rows;
-  })
-  .catch(function() {
-    document.getElementById('tbody').innerHTML = '<tr><td colspan="2" style="color:red">加载失败</td></tr>';
+fetch('manifest.json').then(r=>r.json()).then(d=>{
+  let h='';
+  Object.keys(d.skills).sort().forEach(k=>{
+    h+='<tr><td><a href="'+k+'/skill.md">'+k+'</a></td><td class="ver">'+d.skills[k].version+'</td></tr>';
   });
+  list.innerHTML=h;
+}).catch(()=>list.innerHTML='<tr><td colspan="2">加载失败</td></tr>');
 </script>
-
 </body>
 </html>
 
