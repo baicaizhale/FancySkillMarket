@@ -11,7 +11,7 @@ triggers:
 auto_trigger: true
 source: "coreprotect"
 author: "FancyHelper Team"
-version: "1.0.0"
+version: "1.1.0"
 categories:
   - "plugin"
   - "logging"
@@ -41,6 +41,29 @@ categories:
   - 再次执行该命令可关闭查询模式
   - 查询模式下左键方块 = 查看该位置的日志
   - 查询模式下右键方块 = 查看放置在该位置的方块日志
+
+## 结果解读
+
+查询结果每行格式：`时间 tag 玩家名/实体名 动作 方块名/描述 坐标`
+
+示例输出（方块破坏，已被回滚）：
+```
+1.53/m ago {red}- {#31b0e0}{strikethrough}#tnt{white}{strikethrough} broke {#31b0e0}{strikethrough}dirt{white}.
+                                      {gray}^ (x2051/y71/z-1998/world) {gray}{italic}(a:block)
+```
+
+部分颜色标记含义：
+
+| 标记 | 含义 |
+|------|------|
+| `{green} +` | 正向操作：方块放置、容器放入 |
+| `{red} -` | 负向操作：方块破坏、容器取出、击杀 |
+| `{white} -` | 中性记录：聊天、命令、告示牌 |
+| `{white}` | 时间、tag 后的正文 |
+| `{gray}` | 坐标信息（位于行末缩进行） |
+| `{italic}` | 动作描述（如 `(a:block)`） |
+| `{bold}` | 坐标缩进的填充占位 |
+| `{strikethrough}` | **该记录已被回滚（rollback）**，事件效果已被撤销 |
 
 ## 回档与恢复
 
