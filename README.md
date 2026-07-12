@@ -138,4 +138,4 @@ npx wrangler pages deploy .
 
 ## License
 
-本项目基于 GNU General Public License v3.0 开源。
+本项目基于 [The Unlicense](LICENSE) 开源，属于公共领域。
