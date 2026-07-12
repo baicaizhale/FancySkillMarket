@@ -1,0 +1,80 @@
+name: Generate Manifest
+
+on:
+  push:
+    branches: [main]
+    paths: ["skills/**"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Generate manifest.json
+        run: |
+          python3 << 'PYEOF'
+          import json, os, re
+
+          skills_dir = "skills"
+          manifest = {"skills": {}}
+
+          if not os.path.isdir(skills_dir):
+              print("No skills directory found")
+              exit(0)
+
+          for entry in sorted(os.listdir(skills_dir)):
+              skill_path = os.path.join(skills_dir, entry)
+              if not os.path.isdir(skill_path):
+                  continue
+
+              skill_md = os.path.join(skill_path, "skill.md")
+              if not os.path.isfile(skill_md):
+                  continue
+
+              # 读取 skill.md 的 front matter 获取版本号
+              version = "0.0.1"
+              with open(skill_md, encoding="utf-8") as f:
+                  content = f.read()
+              m = re.search(r"^---\s*\n(.*?)\n---", content, re.DOTALL)
+              if m:
+                  fm = m.group(1)
+                  vm = re.search(r"^version:\s*(.+)$", fm, re.MULTILINE)
+                  if vm:
+                      version = vm.group(1).strip().strip('"').strip("'")
+
+              # 列出所有文件
+              files = []
+              for f in sorted(os.listdir(skill_path)):
+                  fpath = os.path.join(skill_path, f)
+                  if os.path.isfile(fpath):
+                      files.append(f)
+
+              manifest["skills"][entry] = {
+                  "version": version,
+                  "files": files
+              }
+
+          with open("manifest.json", "w", encoding="utf-8") as f:
+              json.dump(manifest, f, indent=2, ensure_ascii=False)
+              f.write("\n")
+
+          print("manifest.json generated:")
+          print(json.dumps(manifest, indent=2, ensure_ascii=False))
+          PYEOF
+
+      - name: Commit manifest.json
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add manifest.json
+          if git diff --cached --quiet; then
+            echo "No changes to manifest.json"
+          else
+            git commit -m "chore: auto-update manifest.json"
+            git push
+          fi
