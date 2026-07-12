@@ -1,18 +1,92 @@
 {
   "skills": {
-    "cmi": { "version": "1.0.0" },
-    "coreprotect": { "version": "1.1.0" },
-    "essentialsx": { "version": "1.1.0" },
-    "fancyhelper": { "version": "1.0.1" },
-    "give": { "version": "1.0.0" },
-    "house-builder": { "version": "1.0.0" },
-    "luckperms": { "version": "1.1.0" },
-    "mcmmo": { "version": "1.1.0" },
-    "multiverse": { "version": "1.1.0" },
-    "nbt-format": { "version": "1.0.0" },
-    "placeholderapi": { "version": "1.1.0" },
-    "residence": { "version": "1.1.0" },
-    "vault": { "version": "1.1.0" },
-    "worldedit": { "version": "1.1.0" }
+    "cmi": {
+      "version": "1.0.0",
+      "files": [
+        "skill.md"
+      ]
+    },
+    "coreprotect": {
+      "version": "1.1.0",
+      "files": [
+        "skill.md"
+      ]
+    },
+    "essentialsx": {
+      "version": "1.1.0",
+      "files": [
+        "skill.md"
+      ]
+    },
+    "fancyhelper": {
+      "version": "1.0.1",
+      "files": [
+        "skill.md"
+      ]
+    },
+    "give": {
+      "version": "1.0.0",
+      "files": [
+        "skill.md"
+      ]
+    },
+    "house-builder": {
+      "version": "1.0.0",
+      "files": [
+        "japanese.md",
+        "medieval.md",
+        "modern.md",
+        "rustic.md",
+        "skill.md"
+      ]
+    },
+    "luckperms": {
+      "version": "1.1.0",
+      "files": [
+        "skill.md"
+      ]
+    },
+    "mcmmo": {
+      "version": "1.1.0",
+      "files": [
+        "skill.md"
+      ]
+    },
+    "multiverse": {
+      "version": "1.1.0",
+      "files": [
+        "skill.md"
+      ]
+    },
+    "nbt-format": {
+      "version": "1.0.0",
+      "files": [
+        "skill.md"
+      ]
+    },
+    "placeholderapi": {
+      "version": "1.1.0",
+      "files": [
+        "skill.md"
+      ]
+    },
+    "residence": {
+      "version": "1.1.0",
+      "files": [
+        "skill.md"
+      ]
+    },
+    "vault": {
+      "version": "1.1.0",
+      "files": [
+        "skill.md"
+      ]
+    },
+    "worldedit": {
+      "version": "1.1.0",
+      "files": [
+        "skill.md"
+      ]
+    }
   }
 }
