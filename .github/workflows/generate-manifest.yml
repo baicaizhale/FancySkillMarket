@@ -3,7 +3,7 @@ name: Generate Manifest
 on:
   push:
     branches: [main]
-    paths: ["skills/**"]
+    paths: ["*/skill.md", "manifest.json"]
   workflow_dispatch:
 
 permissions:
@@ -20,19 +20,16 @@ jobs:
           python3 << 'PYEOF'
           import json, os, re
 
-          skills_dir = "skills"
+          exclude = {".git", ".github", ".wrangler", "node_modules", "__pycache__"}
           manifest = {"skills": {}}
 
-          if not os.path.isdir(skills_dir):
-              print("No skills directory found")
-              exit(0)
-
-          for entry in sorted(os.listdir(skills_dir)):
-              skill_path = os.path.join(skills_dir, entry)
-              if not os.path.isdir(skill_path):
+          for entry in sorted(os.listdir(".")):
+              if entry.startswith(".") or entry in exclude:
+                  continue
+              if not os.path.isdir(entry):
                   continue
 
-              skill_md = os.path.join(skill_path, "skill.md")
+              skill_md = os.path.join(entry, "skill.md")
               if not os.path.isfile(skill_md):
                   continue
 
@@ -49,8 +46,8 @@ jobs:
 
               # 列出所有文件
               files = []
-              for f in sorted(os.listdir(skill_path)):
-                  fpath = os.path.join(skill_path, f)
+              for f in sorted(os.listdir(entry)):
+                  fpath = os.path.join(entry, f)
                   if os.path.isfile(fpath):
                       files.append(f)
 
