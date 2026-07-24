@@ -1,218 +1,242 @@
 # 日式风格房屋建造指南
 
-日式风格特点：深色木材、直线条、大屋顶挑檐、格子推拉门、庭院景观、自然融合。
+## 核心铁律
 
-## 材料清单
+1. **必须围合**：四面必须有墙，不能透风。墙高至少4格，留门（宽1高2）和窗（宽2高1）。
+2. **必须落地**：地基必须连接到地面。如果玩家浮空，用支柱（至少4根）从地板连接到地面。
+3. **屋顶必须对称**：左右前后必须一致，不能一边翘一边塌。
+4. **先主体后装饰**：没有完整的墙和屋顶，禁止建庭院、走廊、装饰。
 
-| 部位 | 推荐材料 | 备选材料 |
-|------|----------|----------|
-| 木构架 | 云杉原木/木板 | 深色橡木、丛林木 |
-| 外墙 | 白色羊毛（模拟土壁） | 白色陶瓦、淡灰色混凝土 |
-| 屋顶 | 深色橡木楼梯 + 石砖楼梯 | 紫红色陶瓦、海晶石 |
-| 地板 | 云杉木板 | 白桦木板、竹板 |
-| 推拉门 | 云杉门 + 白色羊毛 | 深色橡木门 |
-| 窗纸 | 白色染色玻璃板 | 玻璃板(加活板门遮挡下半) |
-| 庭院 | 砾石、草径、砂土 | 沙子、圆石 |
-| 装饰 | 灯笼、活板门、竹、樱花(粉色羊毛) | 栅栏、踏石、鲤鱼旗 |
+---
 
-## 推荐尺寸
+## 建筑类型识别
 
-日式建筑 **横向舒展**，不宜过高：
+玩家说"日式房屋" → 默认建造 **9×11 主屋**（完整版，不是亭子）
 
-- 茶室小屋：7 x 7（正方形），高 4
-- 主屋：9 x 11（长方形），高 4-5
-- 大宅院：13 x 15 + 回廊，高 5
-
-## 核心设计元素
-
-1. **大屋顶挑檐**：屋顶比墙面宽出 2 格以上，屋檐深远
-2. **直线条**：没有拱形，全是直线和直角
-3. **推拉门（障子）**：外墙大面积用白色和木色组合
-4. **架空地板**：房屋高出地面半格到 1 格
-5. **内外连通**：推拉门通向庭院/走廊
-
-## 建造步骤（以 9x11 主屋为例）
-
-### 第一步：高台地基
-
-日式房屋通常建在抬高的木台上：
-
+结构必须是：
 ```
-# 地基边框（用云杉原木围一圈，高出地面 1 格）
-/fill <x> <y+1> <z> <x+8> <y+1> <z+10> spruce_log replace
-
-# 地基内部填充（云杉木板）
-/fill <x+1> <y+1> <z+1> <x+7> <y+1> <z+9> spruce_planks replace
+        ┌─────────────────┐
+        │    大屋顶（挑出墙面2格）   │
+        │  ┌─────────────┐  │
+        │  │             │  │
+        │  │   室内空间   │  │  ← 四面有墙，不能透风
+        │  │  (有地板)    │  │
+        │  │             │  │
+        │  └─────────────┘  │
+        │    ↑ 外廊（可选）   │
+        └─────────────────┘
+              ↓
+           地基（落地）
 ```
 
-y 为玩家 y 坐标，地基在地面之上而非之下。
+---
 
-### 第二步：回廊/外廊（縁側）
-
-日式建筑外侧有木质走廊：
+## 第一步：获取玩家坐标
 
 ```
-# 正面外廊（宽 2 格，延伸整个正面）
-/fill <x-2> <y+1> <z+10> <x+10> <y+1> <z+11> spruce_planks replace
-
-# 外廊边缘用云杉楼梯做过渡
-/fill <x-2> <y+1> <z+12> <x+10> <y+1> <z+12> spruce_stairs replace
+/data get entity <玩家名> Pos
 ```
 
-### 第三步：立柱与横梁
+拿到 `(px, py, pz)`，所有坐标从这里推导。
+
+### 建筑基准点
+
+| 项目 | 公式 | 说明 |
+|------|------|------|
+| 建筑中心X | `cx = px` | 与玩家同X |
+| 建筑中心Y | `cy = py` | 玩家脚下（地基从这里开始） |
+| 建筑中心Z | `cz = pz + 5` | 玩家前方5格 |
+| 朝向 | 玩家面朝方向为Z+ | 正面朝玩家前方 |
+
+**主体尺寸**：长9（X方向）× 宽11（Z方向）× 高5（Y方向，从地基到屋顶底部）
+
+---
+
+## 第二步：地基（必须落地）
 
 ```
-# 四角立柱
-/fill <x> <y+2> <z> <x> <y+5> <z> spruce_log replace
-/fill <x+8> <y+2> <z> <x+8> <y+5> <z> spruce_log replace
-/fill <x> <y+2> <z+10> <x> <y+5> <z+10> spruce_log replace
-/fill <x+8> <y+2> <z+10> <x+8> <y+5> <z+10> spruce_log replace
+# 地基边框（云杉原木，围一圈，高2格，必须落地）
+/fill (cx-4, cy, cz-5) (cx+4, cy+1, cz+5) spruce_log
 
-# 水平横梁（顶部圈梁）
-/fill <x> <y+5> <z> <x+8> <y+5> <z> spruce_log replace
-/fill <x> <y+5> <z+10> <x+8> <y+5> <z+10> spruce_log replace
-/fill <x> <y+5> <z> <x> <y+5> <z+10> spruce_log replace
-/fill <x+8> <y+5> <z> <x+8> <y+5> <z+10> spruce_log replace
+# 地基内部填充（云杉木板，作为室内地板）
+/fill (cx-3, cy+1, cz-4) (cx+3, cy+1, cz+4) spruce_planks
 ```
 
-### 第四步：外墙（土壁 + 障子）
+**自检**：地基是否从地面开始？是。地板是否在Y+1？是。
 
-日式外墙下半段为实墙（白色），上半段为格子推拉窗：
+---
 
-```
-# 下半段：白色土壁（高 2 格）
-/fill <x+1> <y+2> <z+1> <x+7> <y+3> <z+9> white_wool replace
-
-# 上半段：障子推拉门（白色玻璃板 + 木框架）
-# 正面（z+10 一侧）用白色玻璃板做推拉门效果
-/fill <x+1> <y+4> <z+10> <x+7> <y+5> <z+10> white_stained_glass_pane replace
-# 在玻璃之间加云杉原木竖条
-/setblock <x+3> <y+2> <z+10> spruce_fence replace
-/setblock <x+5> <y+2> <z+10> spruce_fence replace
-```
-
-### 第五步：门窗
-
-- **推拉门**：云杉门，宽 2 高 3，成对放置
-- 门两侧用 **云杉栅栏** 做门框
-- 窗户：**白色染色玻璃板** 配木栅栏框架
-
-### 第六步：屋顶（大挑檐和风 roof）
-
-日式屋顶最核心——**屋檐深远，挑出墙面至少 2 格**。
+## 第三步：立柱（四角+中间，必须通到地板）
 
 ```
-# 屋顶主体（从 y+6 到 y+8，用深色橡木楼梯逐层搭建）
-# 第一层屋檐（挑出墙面 2 格，用楼梯）
-/fill <x-2> <y+6> <z-2> <x+10> <y+6> <z+12> dark_oak_planks replace
+# 四角立柱（从地板通到屋顶底部，高4格）
+/fill (cx-4, cy+1, cz-5) (cx-4, cy+4, cz-5) spruce_log
+/fill (cx+4, cy+1, cz-5) (cx+4, cy+4, cz-5) spruce_log
+/fill (cx-4, cy+1, cz+5) (cx-4, cy+4, cz+5) spruce_log
+/fill (cx+4, cy+1, cz+5) (cx+4, cy+4, cz+5) spruce_log
 
-# 屋顶斜面（用楼梯从外向内逐级升高）
-# 左侧屋檐：从 x-2 到 x+3，每高一格向内缩 1 格
-/fill <x-2> <y+6> <z-2> <x-2> <y+6> <z+12> dark_oak_stairs[facing=east] replace
-/fill <x-1> <y+7> <z-1> <x-1> <y+7> <z+11> dark_oak_stairs[facing=east] replace
-/fill <x+0> <y+8> <z-1> <x+0> <y+8> <z+11> dark_oak_stairs[facing=east] replace
-
-# 右侧屋檐类推
-/fill <x+10> <y+6> <z-2> <x+10> <y+6> <z+12> dark_oak_stairs[facing=west] replace
-...
-
-# 屋脊线（最顶部用石砖楼梯压顶）
-/fill <x+4> <y+9> <z-1> <x+4> <y+9> <z+11> stone_brick_stairs replace
+# 正面中间立柱（门两侧）
+/fill (cx-1, cy+1, cz+5) (cx-1, cy+4, cz+5) spruce_log
+/fill (cx+1, cy+1, cz+5) (cx+1, cy+4, cz+5) spruce_log
 ```
 
-**屋檐角**：四个角微微上翘（日式建筑标志性特征）：
-```
-# 左前屋檐角微微挑高
-/setblock <x-2> <y+7> <z-2> dark_oak_stairs[facing=east] replace
-```
+**自检**：柱子是否从地板开始？是。是否到屋顶高度？是。
 
-### 第七步：走廊与连接
+---
 
-日式建筑中 **回廊** 连接各个房间：
+## 第四步：墙壁（四面围合，这是关键！）
+
+### 4.1 正面墙（朝南，留大门）
 
 ```
-# 连接主屋和茶室的走廊
-/fill <x+9> <y+1> <z+3> <x+12> <y+1> <z+6> spruce_planks replace
-# 走廊顶
-/fill <x+9> <y+3> <z+3> <x+12> <y+3> <z+6> dark_oak_planks replace
-# 走廊柱子
-/setblock <x+9> <y+2> <z+3> spruce_fence replace
+# 先填整面墙（白色羊毛，模拟土壁）
+/fill (cx-3, cy+2, cz+5) (cx+3, cy+4, cz+5) white_wool
+
+# 挖大门（中央，宽1高2）
+/fill (cx, cy+2, cz+5) (cx, cy+3, cz+5) air
+
+# 大门两侧窗户（宽2高1）
+/fill (cx-3, cy+3, cz+5) (cx-2, cy+3, cz+5) air
+/fill (cx+2, cy+3, cz+5) (cx+3, cy+3, cz+5) air
+# 装玻璃
+/setblock (cx-3, cy+3, cz+5) white_stained_glass_pane
+/setblock (cx-2, cy+3, cz+5) white_stained_glass_pane
+/setblock (cx+2, cy+3, cz+5) white_stained_glass_pane
+/setblock (cx+3, cy+3, cz+5) white_stained_glass_pane
 ```
 
-### 第八步：日式庭院（枯山水）
+### 4.2 背面墙（朝北，实体）
 
 ```
-# 枯山水核心区域（在房屋前方）
-/fill <x-5> <y> <z+5> <x-1> <y> <z+14> gravel replace
-/fill <x-5> <y> <z+5> <x-1> <y> <z+14> sand replace
-
-# 踏石（用石砖台阶嵌入砾石中，蜿蜒路径）
-/setblock <x-3> <y+1> <z+7> stone_brick_slab replace
-/setblock <x-2> <y+1> <z+9> stone_brick_slab replace
-/setblock <x-3> <y+1> <z+11> stone_brick_slab replace
-/setblock <x-2> <y+1> <z+13> stone_brick_slab replace
-
-# 石灯笼（用栅栏+台阶+活板门组合）
-/setblock <x-4> <y+1> <z+8> stone_brick_wall replace
-/setblock <x-4> <y+2> <z+8> stone_brick_slab replace
-/setblock <x-4> <y+2> <z+8> lantern hanging=true replace
-
-# 矮松（用云杉树或大型杜鹃花丛）
-/setblock <x-4> <y+1> <z+10> azalea replace
+/fill (cx-3, cy+2, cz-5) (cx+3, cy+4, cz-5) white_wool
 ```
 
-### 第九步：入口
-
-- **石阶**：从地面到外廊，用 **石砖台阶** 宽 3 格
-- **门廊**：入口处屋檐挑出更大（3 格），用立柱支撑
-- **暖帘**：入口用 **红色羊毛** + **云杉栅栏** 做半截门帘
-
-### 第十步：围墙与植被
+### 4.3 左墙（朝西，留窗）
 
 ```
-# 竹围墙（用云杉栅栏+活板门模拟竹栅栏）
-/fill <x-6> <y+1> <z+2> <x-6> <y+2> <z+14> spruce_fence replace
-
-# 竹林（在围墙边）
-/setblock <x-7> <y> <z+3> bamboo replace
-/setblock <x-7> <y> <z+7> bamboo replace
-/setblock <x-7> <y> <z+11> bamboo replace
-
-# 樱花树（用橡树+粉色羊毛/粉色花瓣）
-/setblock <x-3> <y+1> <z+2> oak_sapling replace
-# 树冠用粉色羊毛
-/fill <x-5> <y+4> <z+0> <x-1> <y+6> <z+4> pink_wool replace
+/fill (cx-4, cy+2, cz-4) (cx-4, cy+4, cz+4) white_wool
+# 挖窗（中间，宽2高1）
+/fill (cx-4, cy+3, cz-1) (cx-4, cy+3, cz) air
+/setblock (cx-4, cy+3, cz-1) white_stained_glass_pane
+/setblock (cx-4, cy+3, cz) white_stained_glass_pane
 ```
 
-## 日式风成品参考
+### 4.4 右墙（朝东，留窗）
 
 ```
-尺寸: 9 x 11，屋檐挑出 2-3 格，整体占地更大
-外观: 深色木构架 + 白墙 + 深色大屋顶 + 纸窗
-屋顶: 大挑檐，四角微翘，深色瓦片
-庭院: 枯山水、石灯笼、踏石、竹林
-氛围: 宁静、禅意、与自然融为一体
+/fill (cx+4, cy+2, cz-4) (cx+4, cy+4, cz+4) white_wool
+# 挖窗（中间，宽2高1）
+/fill (cx+4, cy+3, cz-1) (cx+4, cy+3, cz) air
+/setblock (cx+4, cy+3, cz-1) white_stained_glass_pane
+/setblock (cx+4, cy+3, cz) white_stained_glass_pane
 ```
 
-## 变体
+**自检**：四面墙是否围合？是。是否有洞？只有门和窗。室内是否封闭？是。
 
-### 茶室
-- 极小尺寸（5 x 5）
-- 矮门（需俯身进入，用活板门做门）
-- 内部设 **壁龛**（展示架+画）
-- 窗外正对庭院最佳景观
+---
 
-### 日式城堡天守阁
-- 多层结构（5-7 层）
-- 每层比下层缩小，呈金字塔形
-- 最下层：石砌基座（深板岩）
-- 以上各层：白墙+深色木框
-- 屋顶：各层独立，翘角显著
-- 顶层：金鯱装饰（用金块+海晶灯）
+## 第五步：屋顶（必须对称，这是灵魂）
 
-### 温泉旅馆
-- 长条形建筑（15 x 7）
-- 半个墙高落地窗
-- 室外温泉池：**水** 周围用 **石砖** 围边，冒 **气泡柱**（用灵魂沙）
-- 周围种 **樱花树** 和 **竹子**
-- 入口悬挂 **暖帘**（红色/蓝色羊毛）
+日式屋顶核心：**大挑檐，四面一致，中间高四周低**。
+
+```
+# 屋顶第一层（最宽，挑出墙面2格，用深色橡木木板）
+/fill (cx-6, cy+5, cz-7) (cx+6, cy+5, cz+7) dark_oak_planks
+
+# 屋顶第二层（缩进1格）
+/fill (cx-5, cy+6, cz-6) (cx+5, cy+6, cz+6) dark_oak_planks
+
+# 屋顶第三层（再缩进1格）
+/fill (cx-4, cy+7, cz-5) (cx+4, cy+7, cz+5) dark_oak_planks
+
+# 屋顶第四层（再缩进1格）
+/fill (cx-3, cy+8, cz-4) (cx+3, cy+8, cz+4) dark_oak_planks
+
+# 屋脊（最顶部，1格宽）
+/fill (cx-2, cy+9, cz-3) (cx+2, cy+9, cz+3) dark_oak_planks
+```
+
+**四角微翘**（标志性特征）：
+```
+/setblock (cx-6, cy+6, cz-7) dark_oak_stairs[facing=east]
+/setblock (cx+6, cy+6, cz-7) dark_oak_stairs[facing=west]
+/setblock (cx-6, cy+6, cz+7) dark_oak_stairs[facing=east]
+/setblock (cx+6, cy+6, cz+7) dark_oak_stairs[facing=west]
+```
+
+**自检**：
+- [ ] 屋顶是否四面挑出一致？
+- [ ] 是否从外向内逐层升高？
+- [ ] 四角是否对称微翘？
+- [ ] 屋脊是否在正中央？
+
+---
+
+## 第六步：门和内部
+
+```
+# 大门（云杉木门，分上下，朝外开）
+/setblock (cx, cy+2, cz+5) spruce_door[facing=south,half=lower]
+/setblock (cx, cy+3, cz+5) spruce_door[facing=south,half=upper]
+
+# 室内地板（与地基地板同层，已经铺好）
+# 室内家具
+/setblock (cx-2, cy+2, cz+2) bed[facing=north,part=foot]
+/setblock (cx-2, cy+2, cz+3) bed[facing=north,part=head]
+
+/setblock (cx+2, cy+2, cz+2) crafting_table
+/setblock (cx+2, cy+2, cz+3) furnace[facing=south]
+
+/setblock (cx, cy+2, cz+0) chest[facing=south]
+```
+
+---
+
+## 第七步：外廊（可选，但主体完成后才能做）
+
+```
+# 正面外廊（宽2格，云杉木板）
+/fill (cx-4, cy+1, cz+6) (cx+4, cy+1, cz+7) spruce_planks
+
+# 外廊柱子（支撑屋顶挑出部分）
+/fill (cx-4, cy+1, cz+7) (cx-4, cy+4, cz+7) spruce_fence
+/fill (cx+4, cy+1, cz+7) (cx+4, cy+4, cz+7) spruce_fence
+```
+
+---
+
+## 第八步：落地支柱（如果浮空）
+
+如果建筑不在地面上，**必须**加支柱：
+
+```
+# 四角支柱，从地基通到地面（或最近实体方块）
+/fill (cx-4, cy, cz-5) (cx-4, <地面Y>, cz-5) spruce_log
+/fill (cx+4, cy, cz-5) (cx+4, <地面Y>, cz-5) spruce_log
+/fill (cx-4, cy, cz+5) (cx-4, <地面Y>, cz+5) spruce_log
+/fill (cx+4, cy, cz+5) (cx+4, <地面Y>, cz+5) spruce_log
+```
+
+---
+
+## 终极自检清单（输出命令前必须全部打勾）
+
+```
+□ 四面墙是否围合？（不能透风）
+□ 墙高是否≥4格？
+□ 门是否在正面中央？宽1高2？
+□ 窗户是否在墙上？不是悬空？
+□ 屋顶是否四面挑出一致？
+□ 屋顶是否从外向内逐层升高？
+□ 屋脊是否在正中央？
+□ 地基是否落地？（或支柱是否通到地面）
+□ 室内是否有地板？（不能站在空气上）
+□ 家具是否在室内？（不能放在屋顶上或墙外）
+```
+
+**如果任何一项未通过，停止建造，重新计算坐标。**
+
+
+---
+
+你把这套给AI试试，如果还造出亭子，我直播吃键盘。

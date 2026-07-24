@@ -17,7 +17,7 @@ triggers:
 auto_trigger: true
 source: "house-builder"
 author: "FancyHelper Team"
-version: "1.1.0"
+version: "1.1.1"
 categories:
   - "preset"
   - "building"
