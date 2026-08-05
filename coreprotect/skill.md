@@ -11,7 +11,7 @@ triggers:
 auto_trigger: true
 source: "coreprotect"
 author: "FancyHelper Team"
-version: "1.1.0"
+version: "1.1.1"
 categories:
   - "plugin"
   - "logging"
@@ -67,6 +67,8 @@ categories:
 
 ## 回档与恢复
 
+注意：为了防止操作错误的对象，回档之前必须先使用 `/co lookup` 查询
+
 - `/co rollback <参数>` - 回档（撤销行为，将改动恢复到之前的状态）
 - `/co restore <参数>` - 恢复（重做行为，将回档的操作重新应用）
 
@@ -88,9 +90,9 @@ categories:
 ## 参数说明
 
 ### 用户参数 `u:`
+
 - `u:<用户名>` - 指定玩家名称
-- `u:#*` - 所有玩家
-- 示例：`u:Steve`, `u:Notch`, `u:#*`
+- 示例：`u:Steve`, `u:baicaizhale`
 
 ### 时间参数 `t:`
 - `t:<时间>` - 指定时间范围
@@ -141,7 +143,7 @@ categories:
 ```
 /co l u:Steve t:1d r:20 - 查询 Steve 在20格半径内1天的操作
 /co l t:1h r:#global a:-block - 查询1小时内全服所有方块破坏记录
-/co l u:#* t:30m r:50 a:+container - 查询30分钟内50格半径所有玩家的容器放入记录
+/co l u:baicaizhale t:30m r:50 a:+container - 查询30分钟内50格半径baicaizhale的容器放入记录
 /co l t:1w a:chat - 查询1周内的所有聊天记录
 /co l t:1d a:command - 查询1天内执行的所有命令
 ```
@@ -163,7 +165,7 @@ categories:
 ### 高级组合示例
 ```
 /co rollback u:Griefer t:3d r:#global a:-block,#tnt - 回档 Griefer 3天内全服破坏的方块（排除TNT）
-/co l u:#* t:1h r:30 a:+container b:diamond - 查询1小时内30格半径所有玩家放入钻石的记录
+/co l u:Steve t:1h r:30 a:+container b:diamond - 查询1小时内30格半径Steve放入钻石的记录
 /co rollback u:Steve t:1w r:#worldedit - 回档 Steve 1周内在WE选区内的操作
 ```
 
