@@ -2,8 +2,6 @@
 
 > 此仓库的所有 skill 均与 codex、ClaudeCode 等不兼容，专门为 FancyHelper 服务。
 
-Minecraft 服务器管理员专用 Claude Code Skill 市场。基于 Cloudflare Workers 部署的静态站点。
-
 ## 项目结构
 
 ```
